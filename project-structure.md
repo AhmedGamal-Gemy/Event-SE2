@@ -10,7 +10,7 @@ An event registration system that allows organizers to create events and partici
 - **Team 4 (User Service)**: [Assign to an existing team or new members]
 
 ## Technology Stack
-- Java 17
+- Java 24
 - Spring Boot 3.2
 - Spring Cloud
 - PostgreSQL
