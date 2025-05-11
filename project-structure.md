@@ -1,12 +1,13 @@
-# Event Registration System - Project Structure and Task Division
+# Event Registration System - Project Structure
 
 ## Project Overview
-An event registration system that allows organizers to create events and participants to register for them. The system will be built using Spring Boot with a microservices architecture.
+An event registration system that allows organizers to create events and participants to register for them. The system includes user authentication and management, built using Spring Boot with a microservices architecture.
 
 ## Team Structure
 - **Team 1 (Event Service)**: [Member 1, Member 2]
 - **Team 2 (Registration Service)**: [Member 3, Member 4]
 - **Team 3 (Gateway & UI)**: [Member 5, Member 6]
+- **Team 4 (User Service)**: [Assign to an existing team or new members]
 
 ## Technology Stack
 - Java 17
@@ -81,6 +82,47 @@ event-registration-system/
 │       │   └── resources/
 │       │       └── application.yml
 │       └── test/
+├── user-service/
+│   ├── pom.xml
+│   └── src/
+│       ├── main/
+│       │   ├── java/com/university/userservice/
+│       │   │   ├── UserServiceApplication.java
+│       │   │   ├── controller/
+│       │   │   │   ├── AuthController.java
+│       │   │   │   └── UserController.java
+│       │   │   ├── model/
+│       │   │   │   ├── User.java
+│       │   │   │   ├── Role.java
+│       │   │   │   └── UserRole.java
+│       │   │   ├── repository/
+│       │   │   │   ├── UserRepository.java
+│       │   │   │   └── RoleRepository.java
+│       │   │   ├── service/
+│       │   │   │   ├── UserService.java
+│       │   │   │   ├── UserServiceImpl.java
+│       │   │   │   ├── AuthService.java
+│       │   │   │   └── AuthServiceImpl.java
+│       │   │   ├── dto/
+│       │   │   │   ├── UserDTO.java
+│       │   │   │   ├── LoginRequest.java
+│       │   │   │   ├── SignupRequest.java
+│       │   │   │   ├── JwtResponse.java
+│       │   │   │   └── MessageResponse.java
+│       │   │   ├── security/
+│       │   │   │   ├── WebSecurityConfig.java
+│       │   │   │   ├── jwt/
+│       │   │   │   │   ├── JwtUtils.java
+│       │   │   │   │   └── AuthTokenFilter.java
+│       │   │   │   └── services/
+│       │   │   │       └── UserDetailsServiceImpl.java
+│       │   │   ├── exception/
+│       │   │   │   └── GlobalExceptionHandler.java
+│       │   │   └── aspect/
+│       │   │       └── LoggingAspect.java
+│       │   └── resources/
+│       │       └── application.yml
+│       └── test/
 ├── discovery-service/
 │   ├── pom.xml
 │   └── src/
@@ -94,7 +136,12 @@ event-registration-system/
 │   └── src/
 │       └── main/
 │           ├── java/com/university/apigateway/
-│           │   └── ApiGatewayApplication.java
+│           │   ├── ApiGatewayApplication.java
+│           │   ├── config/
+│           │   │   ├── RouteConfig.java
+│           │   │   └── SecurityConfig.java
+│           │   └── filter/
+│           │       └── JwtAuthenticationFilter.java
 │           └── resources/
 │               └── application.yml
 └── ui-service/
@@ -106,7 +153,40 @@ event-registration-system/
             └── resources/
                 ├── application.yml
                 ├── static/
+                │   ├── css/
+                │   ├── js/
+                │   │   └── auth.js
+                │   └── images/
                 └── templates/
+                    ├── index.html
+                    ├── login.html
+                    ├── register.html
+                    ├── user-profile.html
+                    └── events/
+```
+
+## Communications Between Services
+
+```
+┌──────────────┐      ┌──────────────┐
+│  UI Service  │─────>│  API Gateway  │
+└──────────────┘      └───────┬──────┘
+                              │
+                              ▼
+┌─────────────────────────────────────┐
+│                                     │
+▼                   ▼                 ▼
+┌──────────┐    ┌──────────┐    ┌──────────┐
+│   User   │◄──►│   Event  │◄──►│Registration│
+│ Service  │    │ Service  │    │  Service  │
+└──────────┘    └──────────┘    └──────────┘
+     │                │              │
+     │                │              │
+     ▼                ▼              ▼
+┌──────────┐    ┌──────────┐    ┌──────────┐
+│   User   │    │  Event   │    │Registration│
+│   DB     │    │   DB     │    │    DB     │
+└──────────┘    └──────────┘    └──────────┘
 ```
 
 ## Service Details and Responsibilities
@@ -141,6 +221,19 @@ event-registration-system/
 - `GET /api/events/{eventId}/registrations` - Get all registrations for an event
 - `GET /api/participants/{id}/registrations` - Get all registrations for a participant
 
+### User Service (Team 4)
+**Responsibilities:**
+- User authentication (login)
+- User registration (signup)
+- User profile management
+- Role-based authorization
+
+**Key Endpoints:**
+- `POST /api/auth/signup` - Register a new user
+- `POST /api/auth/login` - Authenticate user and return JWT token
+- `GET /api/users/{id}` - Get user profile
+- `PUT /api/users/{id}` - Update user profile
+
 ### API Gateway & UI Service (Team 3)
 **Responsibilities:**
 - Route requests to appropriate services
@@ -153,41 +246,60 @@ event-registration-system/
 
 ### Event Service Database
 - **Events**
-  - id (PK)
-  - name
-  - description
-  - location
-  - start_date
-  - end_date
-  - capacity
-  - status (UPCOMING, ONGOING, COMPLETED, CANCELLED)
-  - organizer_id
-  - created_at
-  - updated_at
+    - id (PK)
+    - name
+    - description
+    - location
+    - start_date
+    - end_date
+    - capacity
+    - status (UPCOMING, ONGOING, COMPLETED, CANCELLED)
+    - organizer_id
+    - created_at
+    - updated_at
 
 ### Registration Service Database
 - **Participants**
-  - id (PK)
-  - name
-  - email
-  - phone
-  - created_at
-  - updated_at
+    - id (PK)
+    - name
+    - email
+    - phone
+    - created_at
+    - updated_at
 
 - **Registrations**
-  - id (PK)
-  - event_id
-  - participant_id
-  - registration_date
-  - status (CONFIRMED, CANCELLED, WAITLISTED)
-  - created_at
-  - updated_at
+    - id (PK)
+    - event_id
+    - participant_id
+    - registration_date
+    - status (CONFIRMED, CANCELLED, WAITLISTED)
+    - created_at
+    - updated_at
 
-## Communication Between Services
-- Event Service will provide event information to Registration Service
-- Registration Service will update event capacity in Event Service
-- All communications will be through RESTful APIs
-- Service discovery will be handled by Spring Cloud Netflix Eureka
+### User Service Database
+- **Users**
+    - id (PK)
+    - username
+    - email
+    - password (encrypted)
+    - first_name
+    - last_name
+    - phone_number
+    - enabled (boolean)
+    - account_non_locked (boolean)
+    - account_non_expired (boolean)
+    - credentials_non_expired (boolean)
+    - last_login_date
+    - created_at
+    - updated_at
+
+- **Roles**
+    - id (PK)
+    - name (ROLE_USER, ROLE_ADMIN, ROLE_ORGANIZER)
+
+- **User_Roles** (Junction table)
+    - user_id (FK)
+    - role_id (FK)
 
 ## Development Process
 1. Develop and test microservices independently
@@ -195,38 +307,47 @@ event-registration-system/
 3. Integrate services using Docker Compose
 4. Implement CI/CD pipeline (optional)
 
+## Authentication Flow
+1. User registers or logs in through the UI Service
+2. Request is forwarded to the User Service through API Gateway
+3. User Service authenticates the user and issues a JWT token
+4. UI Service stores the JWT token (usually in localStorage)
+5. Subsequent requests include the JWT token in the Authorization header
+6. API Gateway validates tokens before forwarding requests to other services
+7. Each service performs additional authorization checks for specific operations
+
 ## Documentation Requirements (Based on Grading Criteria)
 1. **SRS Documentation (20%)**
-   - Use Case Diagrams
-   - Activity Diagrams
-   - Sequence Diagrams
-   - Class Diagrams
-   - Entity Relationship Diagrams
+    - Use Case Diagrams
+    - Activity Diagrams
+    - Sequence Diagrams
+    - Class Diagrams
+    - Entity Relationship Diagrams
 
 2. **SDD Documentation (20%)**
-   - Detailed technical documentation
-   - System architecture
-   - Interface specifications
-   - Database design
-   - Error handling
+    - Detailed technical documentation
+    - System architecture
+    - Interface specifications
+    - Database design
+    - Error handling
 
 3. **Implementation (20%)**
-   - Working code that meets requirements
-   - Unit tests
-   - Integration tests
+    - Working code that meets requirements
+    - Unit tests
+    - Integration tests
 
 4. **OCL (15%)**
-   - Object Constraint Language specifications
-   - Formal constraints on classes and methods
+    - Object Constraint Language specifications
+    - Formal constraints on classes and methods
 
 5. **Aspect-Oriented Programming (15%)**
-   - Logging aspect
-   - Security aspect
-   - Transaction aspect
-   - Performance monitoring aspect
+    - Logging aspect
+    - Security aspect
+    - Transaction aspect
+    - Performance monitoring aspect
 
 6. **Microservices (10%)**
-   - Service decomposition
-   - Inter-service communication
-   - Service discovery
-   - API Gateway
+    - Service decomposition
+    - Inter-service communication
+    - Service discovery
+    - API Gateway
