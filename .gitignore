@@ -1,0 +1,37 @@
+# Ignore Maven and build-related files
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IntelliJ IDEA-specific files
+.idea
+*.iws
+*.iml
+*.ipr
+
+# Logs and environment files
+logs/
+*.log
+.env
+
+# Compiled classes
+*.class
+
+# Packaged files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven wrapper
+.mvn/
+mvnw
+mvnw.cmd
+
+# Docker
+.docker/
