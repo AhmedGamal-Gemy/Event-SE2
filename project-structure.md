@@ -9,7 +9,7 @@ An event registration system that allows organizers to create events and partici
 - **Team 3 (Gateway & UI)**: [Member 5, Member 6]
 
 ## Technology Stack
-- Java 17
+- Java 24
 - Spring Boot 3.2
 - Spring Cloud
 - PostgreSQL
