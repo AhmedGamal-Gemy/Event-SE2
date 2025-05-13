@@ -5,6 +5,7 @@ import com.university.event_service.dto.EventResponseDTO;
 import com.university.event_service.service.EventService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,86 +22,72 @@ public class EventController {
 
     /**
      * Create a new event
-     * @param eventDTO Event creation details
-     * @return Created event with 201 Created status
      */
     @PostMapping
     public ResponseEntity<EventResponseDTO> createEvent(@RequestBody EventDTO eventDTO) {
-        return null;
+        EventResponseDTO createdEvent = eventService.createEvent(eventDTO);
+        return ResponseEntity.status(201).body(createdEvent);
     }
 
-    /**
-     * Retrieve all events
-     * @return List of all events
-     */
+    /** Retrieve all events */
     @GetMapping
     public ResponseEntity<List<EventResponseDTO>> getAllEvents() {
-        return null;
+        List<EventResponseDTO> events = eventService.getAllEvents();
+        return ResponseEntity.ok(events);
     }
 
-    /**
-     * Get a specific event by ID
-     * @param id Event's unique identifier
-     * @return Event details
-     */
+    /** Get a specific event by ID */
     @GetMapping("/{id}")
     public ResponseEntity<EventResponseDTO> getEventById(@PathVariable Long id) {
-        return null;
+        EventResponseDTO event = eventService.getEventById(id);
+        if(event != null) {
+            return ResponseEntity.ok(event);
+        }
+        // لو الحدث مش موجود رجع 404
+        return ResponseEntity.notFound().build();
     }
 
-    /**
-     * Update an existing event
-     * @param id Event's unique identifier
-     * @param eventDTO Updated event details
-     * @return Updated event details
-     */
+    /** Update an existing event */
     @PutMapping("/{id}")
     public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable Long id, @RequestBody EventDTO eventDTO) {
-        return null;
+        EventResponseDTO updatedEvent = eventService.updateEvent(id, eventDTO);
+        if(updatedEvent != null) {
+            return ResponseEntity.ok(updatedEvent);
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    /**
-     * Delete/Cancel an event
-     * @param id Event's unique identifier
-     * @return No content response
-     */
+    /** Delete/Cancel an event */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
-        return null;
+        eventService.deleteEvent(id);
+        return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Reschedule an event
-     * @param id Event's unique identifier
-     * @param startDate New start date
-     * @param endDate New end date
-     * @return Rescheduled event details
-     */
+    /** Reschedule an event */
     @PatchMapping("/{id}/reschedule")
     public ResponseEntity<EventResponseDTO> rescheduleEvent(
             @PathVariable Long id,
             @RequestParam LocalDateTime startDate,
-            @RequestParam LocalDateTime endDate
-    ) {
-        return null;
+            @RequestParam LocalDateTime endDate) {
+        EventResponseDTO rescheduled = eventService.rescheduleEvent(id, startDate, endDate);
+        if(rescheduled != null) {
+            return ResponseEntity.ok(rescheduled);
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    /**
-     * Retrieve upcoming events
-     * @return List of upcoming events
-     */
+    /** Retrieve upcoming events */
     @GetMapping("/upcoming")
     public ResponseEntity<List<EventResponseDTO>> getUpcomingEvents() {
-        return null;
+        List<EventResponseDTO> events = eventService.getUpcomingEvents();
+        return ResponseEntity.ok(events);
     }
 
-    /**
-     * Retrieve events by organizer
-     * @param organizerId Organizer's unique identifier
-     * @return List of events by the organizer
-     */
+    /** Retrieve events by organizer */
     @GetMapping("/organizer/{organizerId}")
     public ResponseEntity<List<EventResponseDTO>> getEventsByOrganizer(@PathVariable Long organizerId) {
-        return null;
+        List<EventResponseDTO> events = eventService.getEventsByOrganizer(organizerId);
+        return ResponseEntity.ok(events);
     }
 }
