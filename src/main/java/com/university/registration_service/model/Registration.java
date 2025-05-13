@@ -1,7 +1,10 @@
 package com.university.registration_service.model;
 
 import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "registrations")
 public class Registration {
 
     // Enum for event status
@@ -9,6 +12,8 @@ public class Registration {
         UPCOMING, ONGOING, COMPLETED, CANCELLED, CONFIRMED
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
