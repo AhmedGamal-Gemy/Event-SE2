@@ -1,11 +1,9 @@
-// RegistrationDTO.java - Input DTO
 package com.university.registration_service.dto;
 
 public class RegistrationDTO {
     private Long eventId;
     private ParticipantDTO participant;
 
-    // Constructors, getters, setters
     public Long getEventId() {
         return eventId;
     }
@@ -22,4 +20,3 @@ public class RegistrationDTO {
         this.participant = participant;
     }
 }
-

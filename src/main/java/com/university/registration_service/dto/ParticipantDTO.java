@@ -6,10 +6,7 @@ public class ParticipantDTO {
     private String email;
     private String phone;
 
-    public ParticipantDTO(Long id, String name, String email, String phone) {
-    }
 
-    // Constructors, getters, setters
     public Long getId() {
         return id;
     }

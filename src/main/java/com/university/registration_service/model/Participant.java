@@ -1,8 +1,7 @@
-// Participant.java
 package com.university.registration_service.model;
 
-import java.time.LocalDateTime;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "participants")
@@ -16,8 +15,6 @@ public class Participant {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-
-    // Constructors, getters, setters
     public Long getId() {
         return id;
     }
@@ -65,5 +62,4 @@ public class Participant {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 }

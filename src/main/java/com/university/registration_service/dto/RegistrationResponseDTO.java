@@ -1,25 +1,14 @@
-package com.university.registration_service.model;
+package com.university.registration_service.dto;
 
-import jakarta.persistence.*;
+import com.university.registration_service.model.Registration;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "registrations")
-public class Registration {
-    // Enum for registration status
-    public enum RegistrationStatus {
-        CONFIRMED, CANCELLED, WAITLISTED
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class RegistrationResponseDTO {
     private Long id;
     private Long eventId;
-    private Participant participant;
+    private ParticipantDTO participant;
     private LocalDateTime registrationDate;
-    private RegistrationStatus status;
-
-    // Constructors, getters, setters
+    private Registration.RegistrationStatus status;
 
     public Long getId() {
         return id;
@@ -37,11 +26,11 @@ public class Registration {
         this.eventId = eventId;
     }
 
-    public Participant getParticipant() {
+    public ParticipantDTO getParticipant() {
         return participant;
     }
 
-    public void setParticipant(Participant participant) {
+    public void setParticipant(ParticipantDTO participant) {
         this.participant = participant;
     }
 
@@ -53,11 +42,11 @@ public class Registration {
         this.registrationDate = registrationDate;
     }
 
-    public RegistrationStatus getStatus() {
+    public Registration.RegistrationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(RegistrationStatus status) {
+    public void setStatus(Registration.RegistrationStatus status) {
         this.status = status;
     }
 }
