@@ -24,7 +24,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @param currentDateTime Current date and time
      * @return List of upcoming events
      */
-    @Query("SELECT e FROM Event e WHERE e.startDate > :currentDateTime AND e.status = com.university.eventservice.model.Event.EventStatus.UPCOMING ORDER BY e.startDate ASC")
+    @Query("SELECT e FROM Event e WHERE e.startDate > :currentDateTime AND e.status = com.university.event_service.model.Event.EventStatus.UPCOMING ORDER BY e.startDate ASC")
     List<Event> findUpcomingEvents(@Param("currentDateTime") LocalDateTime currentDateTime);
 
     /**
